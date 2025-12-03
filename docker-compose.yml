@@ -1,18 +1,47 @@
+version: "3.9"
+
 services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+    restart: unless-stopped
+    depends_on:
+      - backend
+
   backend:
-    build: ./backend
-    container_name: saas-backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: saas_backend
     ports:
       - "8000:8000"
-    environment:
-      - ENV=dev
     volumes:
       - ./backend:/app
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+        DATABASE_URL: postgresql://app:app123@db:5432/saas_db
 
-  frontend:
-    build: ./frontend
-    container_name: saas-frontend
+  db:
+    image: postgres:16
+    container_name: saas_db
+    environment:
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: app123
+      POSTGRES_DB: saas_db
     ports:
-      - "5173:5173"
+      - "5432:5432"
     volumes:
-      - ./frontend:/app
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app -d saas_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
