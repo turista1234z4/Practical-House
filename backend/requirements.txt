@@ -5,3 +5,6 @@ sqlalchemy
 pydantic
 python-dotenv
 alembic
+python-jose
+passlib[argon2]
+argon2-cffi

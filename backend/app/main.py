@@ -1,13 +1,19 @@
 from fastapi import FastAPI
 from app.core.database import Base, engine
-
+from app.routers.auth import router as auth_router
+from app.routers.sensors import router as sensors_router
+from app.models import User, Sensor, SensorReading
 
 app = FastAPI()
 
+app.include_router(auth_router)
+app.include_router(sensors_router)
+
+
 @app.on_event("startup")
 async def startup_event():
-    # Cria as tabelas no banco ao iniciar o backend
     Base.metadata.create_all(bind=engine)
+
 
 @app.get("/")
 def root():

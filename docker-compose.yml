@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   frontend:
     build:
@@ -16,6 +14,7 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     container_name: saas_backend
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
     ports:
       - "8000:8000"
     volumes:
@@ -24,7 +23,7 @@ services:
       db:
         condition: service_healthy
     environment:
-        DATABASE_URL: postgresql://app:app123@db:5432/saas_db
+      DATABASE_URL: postgresql://app:app123@db:5432/saas_db
 
   db:
     image: postgres:16
