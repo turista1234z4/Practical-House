@@ -7,6 +7,7 @@ from app.models.user import User
 from app.core.auth_utils import get_current_user
 from pydantic import BaseModel
 
+
 router = APIRouter(prefix="/sensors", tags=["sensors"])
 
 
@@ -24,12 +25,8 @@ class SensorCreate(BaseModel):
 # -----------------------------
 
 @router.get("/")
-def list_sensors(
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
-):
-    sensors = db.query(Sensor).filter(Sensor.user_id == current_user.id).all()
-    return sensors
+def get_sensors(user = Depends(get_current_user)):
+    return {"msg": "autorizado", "user": user.email}
 
 
 @router.post("/")

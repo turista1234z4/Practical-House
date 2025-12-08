@@ -4,6 +4,9 @@ from app.routers.auth import router as auth_router
 from app.routers.sensors import router as sensors_router
 from app.models import User, Sensor, SensorReading
 
+
+
+
 app = FastAPI()
 
 app.include_router(auth_router)

@@ -1,0 +1,1 @@
+docker exec -it saas_backend python create_user.py
