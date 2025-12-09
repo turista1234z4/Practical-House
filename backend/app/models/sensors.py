@@ -12,6 +12,9 @@ class Sensor(Base):
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
 
+    # Token único para esp
+    device_token = Column(String, unique=True, index=True, nullable=True)
+
     user_id = Column(
         UUID(as_uuid=True),
         ForeignKey("users.id", ondelete="CASCADE"),
@@ -25,8 +28,10 @@ class Sensor(Base):
     updated_at = Column(DateTime, default=datetime.utcnow,
                         onupdate=datetime.utcnow)
 
-    # relacionamento reverso
+    
     user = relationship("User", back_populates="sensors")
-    readings = relationship("SensorReading",
-                            back_populates="sensor",
-                            cascade="all, delete")
+    readings = relationship(
+        "SensorReading",
+        back_populates="sensor",
+        cascade="all, delete"
+    )

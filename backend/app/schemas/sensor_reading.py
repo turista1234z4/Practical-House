@@ -1,7 +1,6 @@
-from uuid import UUID
 from pydantic import BaseModel
+from uuid import UUID
 from datetime import datetime
-
 
 class SensorReadingBase(BaseModel):
     energy_kwh: float | None = None

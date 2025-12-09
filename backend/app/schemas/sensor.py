@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from uuid import UUID
 
 class SensorBase(BaseModel):
     name: str
@@ -16,3 +17,12 @@ class SensorResponse(SensorBase):
 
     class Config:
         orm_mode = True
+
+class SensorWithTokenResponse(BaseModel):
+    id: UUID
+    name: str
+    location: str | None
+    device_token: str
+
+    class Config:
+        from_attributes = True
