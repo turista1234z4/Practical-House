@@ -6,7 +6,7 @@ from app.schemas.sensor import SensorCreate, SensorUpdate, SensorResponse
 from app.core.auth_utils import get_current_user
 import secrets
 from uuid import UUID
-
+from app.schemas.sensor import SensorDeviceTokenResponse
 
 router = APIRouter(prefix="/sensors", tags=["Sensors"])
 device_token = secrets.token_hex(16)
@@ -121,5 +121,25 @@ def renew_device_token(sensor_id: UUID,
 
     db.commit()
     db.refresh(sensor)
+
+    return {"device_token": sensor.device_token}
+
+@router.get("/{sensor_id}/device-token", response_model=SensorDeviceTokenResponse)
+def get_device_token(
+    sensor_id: UUID,
+    db: Session = Depends(get_db),
+    current_user = Depends(get_current_user)
+):
+    sensor = (
+        db.query(Sensor)
+        .filter(
+            Sensor.id == sensor_id,
+            Sensor.user_id == current_user.id
+        )
+        .first()
+    )
+
+    if not sensor:
+        raise HTTPException(status_code=404, detail="Sensor não encontrado")
 
     return {"device_token": sensor.device_token}

@@ -26,3 +26,6 @@ class SensorWithTokenResponse(BaseModel):
 
     class Config:
         from_attributes = True
+        
+class SensorDeviceTokenResponse(BaseModel):
+    device_token: str
