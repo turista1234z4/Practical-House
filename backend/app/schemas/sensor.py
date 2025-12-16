@@ -12,8 +12,8 @@ class SensorUpdate(SensorBase):
     pass
 
 class SensorResponse(SensorBase):
-    id: int
-    user_id: int
+    id: UUID  
+    user_id: UUID  
 
     class Config:
         orm_mode = True
